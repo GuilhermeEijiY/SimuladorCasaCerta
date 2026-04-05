@@ -73,7 +73,7 @@ Banco de Dados (PostgreSQL)
 
 ### Frontend
 - React.js
-- CSS Modules / Tailwind CSS
+- CSS Modules 
 - Axios
 
 ### Backend
