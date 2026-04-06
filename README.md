@@ -104,7 +104,6 @@ Banco de Dados (PostgreSQL)
 
 ### Banco de Dados
 - PostgreSQL
-- Prisma ORM
 
 ---
 
