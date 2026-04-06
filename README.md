@@ -11,6 +11,27 @@ A ferramenta busca reduzir a falta de conhecimento financeiro, permitindo simula
 
 ---
 
+## 🎓 Contexto Acadêmico
+
+Este projeto foi desenvolvido no âmbito da disciplina **Certificadora de Competência Específica (CCE)** do curso de **Análise e Desenvolvimento de Sistemas** da **Universidade Tecnológica Federal do Paraná (UTFPR)**.
+
+**Professor responsável:**  
+Francisco Pereira Junior
+
+---
+
+## 👨‍💻 Autores do Projeto
+
+Este sistema foi desenvolvido por:
+
+- Guilherme Eiji Yoshida  
+- Douglas Cunha  
+- Lucas Okiishi Junqueira Forlini  
+- Samuel Penha Jacobsen  
+- João Guilherme de Souza  
+
+---
+
 ## 🎯 Objetivo
 
 Desenvolver um sistema capaz de:
@@ -60,12 +81,12 @@ O CasaCerta propõe um simulador inteligente que:
 ## 🏗️ Arquitetura
 
 O sistema segue uma arquitetura em camadas:
-Frontend (React)
-↓
-Backend (Node.js)
-↓
-Banco de Dados (PostgreSQL)
 
+Frontend (React)  
+↓  
+Backend (Node.js)  
+↓  
+Banco de Dados (PostgreSQL)
 
 ---
 
@@ -89,42 +110,42 @@ Banco de Dados (PostgreSQL)
 
 ## 🔄 Fluxo da Aplicação
 
-1. Usuário insere dados financeiros
-2. Backend processa as informações
-3. Sistema calcula cenários
-4. Resultados são retornados ao frontend
-5. Usuário visualiza comparações e recomendações
+1. Usuário insere dados financeiros  
+2. Backend processa as informações  
+3. Sistema calcula cenários  
+4. Resultados são retornados ao frontend  
+5. Usuário visualiza comparações e recomendações  
 
 ---
 
 ## 📥 Entrada de Dados
 
-- Valor do imóvel
-- Entrada
-- Prazo
-- Taxa de juros
-- Valor de lance (consórcio)
-- Perfil do usuário (renda, objetivo, urgência)
+- Valor do imóvel  
+- Entrada  
+- Prazo  
+- Taxa de juros  
+- Valor de lance (consórcio)  
+- Perfil do usuário (renda, objetivo, urgência)  
 
 ---
 
 ## 📤 Saída de Dados
 
-- Comparação entre financiamento e consórcio
-- Parcelas mensais
-- Custo total
-- Estimativa de contemplação
-- Impacto do lance
-- Recomendação automática
-- Relatório personalizado
+- Comparação entre financiamento e consórcio  
+- Parcelas mensais  
+- Custo total  
+- Estimativa de contemplação  
+- Impacto do lance  
+- Recomendação automática  
+- Relatório personalizado  
 
 ---
 
 ## 👥 Público-Alvo
 
-- Pessoas interessadas em adquirir imóveis
-- Jovens em planejamento financeiro
-- Usuários sem conhecimento técnico em finanças
+- Pessoas interessadas em adquirir imóveis  
+- Jovens em planejamento financeiro  
+- Usuários sem conhecimento técnico em finanças  
 
 ---
 
@@ -132,8 +153,8 @@ Banco de Dados (PostgreSQL)
 
 Este projeto foi desenvolvido considerando:
 
-- 🎓 **Cliente institucional:** Professor da disciplina CCE  
-- 🧑 **Cliente real:** Lucas Tanaka, potencial comprador de imóvel
+- **Cliente institucional:** Professor da disciplina CCE  
+- **Cliente real:** Lucas Tanaka, potencial comprador de imóvel  
 
 A participação do cliente real auxiliou na definição dos requisitos e validação da proposta.
 
@@ -143,69 +164,60 @@ A participação do cliente real auxiliou na definição dos requisitos e valida
 
 ### Telas previstas:
 
-- 🏠 Tela inicial
-- 📊 Tela de simulação
-- 📈 Tela de resultados
+- Tela inicial  
+- Tela de simulação  
+- Tela de resultados  
 
 Com:
-- Inputs financeiros
-- Botões de simulação
-- Comparação visual
-- Recomendações automáticas
+
+- Inputs financeiros  
+- Botões de simulação  
+- Comparação visual  
+- Recomendações automáticas  
 
 ---
 
 ## 📅 Planejamento
 
-- Levantamento de requisitos
-- Prototipação
-- Desenvolvimento backend
-- Desenvolvimento frontend
-- Integração
-- Testes
+- Definição da equipe e divisão de tarefas  
+- Criação do repositório  
+- Levantamento de requisitos  
+- Prototipação  
+- Desenvolvimento backend  
+- Desenvolvimento frontend  
+- Integração  
+- Testes  
 
 ---
 
 ## 🛠️ Ambientes Colaborativos
 
-- 🔗 GitHub:  
+- GitHub:  
   https://github.com/GuilhermeEijiY/SimuladorCasaCerta
 
-- 📋 Trello:  
+- Trello:  
   https://trello.com/b/chWzUxG7/simulador-casa-certa
 
-- 📄 Documentação:  
+- Documentação:  
   https://docs.google.com/document/d/1OlmD1Z8pGnTow8EvsyPQOIwWPt4aUofzTxSWpQflb9M
-
----
-
-## 👨‍💻 Equipe
-
-| Integrante | Função |
-|----------|------|
-| Integrante 1 | Frontend (UI/UX) |
-| Integrante 2 | Frontend (Integração) |
-| Integrante 3 | Backend |
-| Integrante 4 | Banco de Dados |
-| Integrante 5 | Gestão e Documentação |
 
 ---
 
 ## 📈 Possíveis Evoluções
 
-- Integração com APIs bancárias
-- Inteligência artificial para recomendações
-- Simulações mais avançadas
-- Dashboard financeiro
+- Integração com APIs bancárias  
+- Inteligência artificial para recomendações  
+- Simulações mais avançadas  
+- Dashboard financeiro  
 
 ---
 
 ## 📌 Status do Projeto
 
-🚧 Em desenvolvimento (Fase acadêmica - CCE)
+Em desenvolvimento (Projeto acadêmico - CCE)
 
 ---
 
 ## 📄 Licença
 
-Este projeto é de caráter acadêmico.
+Este projeto é de caráter acadêmico, desenvolvido exclusivamente para fins educacionais.
