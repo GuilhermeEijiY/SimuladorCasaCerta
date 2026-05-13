@@ -1,222 +1,248 @@
-# 🏠 CasaCerta
-### Simulador Comparativo entre Financiamento e Consórcio Imobiliário
+# 🏠 Casa Certa
+
+Simulador comparativo entre financiamento imobiliário e consórcio.
+
+Projeto acadêmico desenvolvido para a disciplina **CCE (Certificadora de Competência Específica)** da **UTFPR**.
 
 ---
 
-## 📌 Sobre o Projeto
+# 📌 Sobre o Projeto
 
-O **CasaCerta** é uma aplicação web desenvolvida com o objetivo de auxiliar usuários na tomada de decisão sobre aquisição de imóveis, por meio da comparação entre **financiamento imobiliário** e **consórcio imobiliário**.
+O Casa Certa é uma aplicação web desenvolvida para auxiliar usuários na tomada de decisão sobre aquisição de imóveis, permitindo comparar cenários entre:
 
-A ferramenta busca reduzir a falta de conhecimento financeiro, permitindo simulações detalhadas e fornecendo recomendações baseadas no perfil do usuário.
+- Financiamento imobiliário SAC
+- Financiamento imobiliário PRICE
+- Consórcio imobiliário
 
----
-
-## 🎓 Contexto Acadêmico
-
-Este projeto foi desenvolvido no âmbito da disciplina **Certificadora de Competência Específica (CCE)** do curso de **Análise e Desenvolvimento de Sistemas** da **Universidade Tecnológica Federal do Paraná (UTFPR)**.
-
-**Professor responsável:**  
-Francisco Pereira Junior
+O sistema busca tornar a decisão financeira mais consciente através de simulações detalhadas e recomendações baseadas no perfil do usuário.
 
 ---
 
-## 👨‍💻 Autores do Projeto
+# 🎓 Contexto Acadêmico
 
-Este sistema foi desenvolvido por:
+Projeto desenvolvido na disciplina:
 
-- Guilherme Eiji Yoshida  
-- Douglas Cunha  
-- Lucas Okiishi Junqueira Forlini  
-- Samuel Penha Jacobsen  
-- João Guilherme de Souza  
+**CCE — Certificadora de Competência Específica**
+Curso: Análise e Desenvolvimento de Sistemas
+Universidade Tecnológica Federal do Paraná (UTFPR)
 
----
+Professor responsável:
 
-## 🎯 Objetivo
-
-Desenvolver um sistema capaz de:
-
-- Simular financiamento imobiliário
-- Simular consórcio imobiliário
-- Comparar cenários financeiros
-- Exibir custo total e parcelas
-- Gerar recomendações inteligentes
-- Analisar perfil do usuário
-- Gerar relatórios personalizados
+- Francisco Pereira Junior
 
 ---
 
-## ⚠️ Problema
+# 👨‍💻 Equipe
 
-Muitas pessoas não compreendem as diferenças entre financiamento e consórcio, o que pode resultar em decisões financeiras inadequadas e endividamento a longo prazo.
-
----
-
-## 💡 Solução
-
-O CasaCerta propõe um simulador inteligente que:
-
-- Considera juros, prazo e entrada
-- Simula lances em consórcios
-- Estima prazo de contemplação
-- Analisa o perfil do usuário
-- Gera recomendações personalizadas
+- Guilherme Eiji Yoshida
+- Douglas Cunha
+- Lucas Okiishi Junqueira Forlini
+- Samuel Penha Jacobsen
+- João Guilherme de Souza
 
 ---
 
-## 🚀 Funcionalidades
+# ⚠️ Problema
 
-- 📊 Simulação de financiamento (SAC e Price)
+Muitas pessoas não compreendem corretamente as diferenças entre financiamento e consórcio, o que pode levar a:
+
+- endividamento excessivo;
+- decisões financeiras inadequadas;
+- falta de planejamento;
+- desconhecimento do custo total da aquisição.
+
+---
+
+# 💡 Solução
+
+O Casa Certa propõe um simulador inteligente capaz de:
+
+- comparar modalidades de aquisição imobiliária;
+- calcular parcelas e custo total;
+- simular financiamento SAC e PRICE;
+- simular consórcio e lances;
+- estimar contemplação;
+- gerar recomendações personalizadas;
+- auxiliar usuários na tomada de decisão.
+
+---
+
+# 🚀 Funcionalidades
+
+- 📊 Simulação de financiamento SAC
+- 📊 Simulação de financiamento PRICE
 - 🏦 Simulação de consórcio
 - ⚖️ Comparação entre modalidades
 - 💰 Cálculo de custo total
-- 🎯 Simulação de lances
+- 🎯 Simulação de lance
 - ⏳ Estimativa de contemplação
-- 🧠 Recomendações inteligentes
-- 📄 Relatórios personalizados
+- 🧠 Recomendação baseada no perfil do usuário
 - 🔐 Autenticação de usuários
 
 ---
 
-## 🏗️ Arquitetura
+# 🧰 Tecnologias Utilizadas
 
-O sistema segue uma arquitetura em camadas:
+## Frontend
 
-Frontend (React)  
-↓  
-Backend (Node.js)  
-↓  
-Banco de Dados (PostgreSQL)
-
----
-
-## 🧰 Tecnologias Utilizadas
-
-### Frontend
 - React.js
-- CSS Modules 
+- Vite
+- CSS Modules
 - Axios
 
-### Backend
+## Backend
+
 - Node.js
 - Express.js
-- JWT (autenticação)
+- JWT
+- bcryptjs
 
-### Banco de Dados
+## Banco de Dados
+
 - PostgreSQL
+- Prisma ORM
 
 ---
 
-## 🔄 Fluxo da Aplicação
+# 🏗️ Arquitetura
 
-1. Usuário insere dados financeiros  
-2. Backend processa as informações  
-3. Sistema calcula cenários  
-4. Resultados são retornados ao frontend  
-5. Usuário visualiza comparações e recomendações  
+O sistema utiliza arquitetura monolítica modular em 3 camadas:
 
----
+```txt
+Frontend (React)
+        ↓
+API REST (Express)
+        ↓
+Banco de Dados (PostgreSQL)
+```
 
-## 📥 Entrada de Dados
+O backend segue organização baseada em módulos:
 
-- Valor do imóvel  
-- Entrada  
-- Prazo  
-- Taxa de juros  
-- Valor de lance (consórcio)  
-- Perfil do usuário (renda, objetivo, urgência)  
+```txt
+Controller → Service → Engine
+```
 
----
-
-## 📤 Saída de Dados
-
-- Comparação entre financiamento e consórcio  
-- Parcelas mensais  
-- Custo total  
-- Estimativa de contemplação  
-- Impacto do lance  
-- Recomendação automática  
-- Relatório personalizado  
+Os engines de cálculo são implementados como funções puras, isolando as regras financeiras da camada HTTP e do banco de dados.
 
 ---
 
-## 👥 Público-Alvo
+# 📂 Estrutura do Projeto
 
-- Pessoas interessadas em adquirir imóveis  
-- Jovens em planejamento financeiro  
-- Usuários sem conhecimento técnico em finanças  
-
----
-
-## 👤 Cliente do Projeto
-
-Este projeto foi desenvolvido considerando:
-
-- **Cliente institucional:** Professor da disciplina CCE  
-- **Cliente real:** Lucas Tanaka, potencial comprador de imóvel  
-
-A participação do cliente real auxiliou na definição dos requisitos e validação da proposta.
-
----
-
-## 🧪 Protótipos
-
-### Telas previstas:
-
-- Tela inicial  
-- Tela de simulação  
-- Tela de resultados  
-
-Com:
-
-- Inputs financeiros  
-- Botões de simulação  
-- Comparação visual  
-- Recomendações automáticas  
+```txt
+SimuladorCasaCerta/
+├── Backend/
+│   ├── src/
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── prisma/
+│
+├── Frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.js
+│
+└── README.md
+```
 
 ---
 
-## 📅 Planejamento
+# 🔄 Fluxo da Aplicação
 
-- Definição da equipe e divisão de tarefas  
-- Criação do repositório  
-- Levantamento de requisitos  
-- Prototipação  
-- Desenvolvimento backend  
-- Desenvolvimento frontend  
-- Integração  
-- Testes  
-
----
-
-## 🛠️ Ambientes Colaborativos
-
-- GitHub:  
-  https://github.com/GuilhermeEijiY/SimuladorCasaCerta
-
-- Trello:  
-  https://trello.com/b/chWzUxG7/simulador-casa-certa
-
-- Documentação:  
-  https://docs.google.com/document/d/1OlmD1Z8pGnTow8EvsyPQOIwWPt4aUofzTxSWpQflb9M
+1. Usuário insere dados financeiros
+2. Backend processa os cálculos
+3. Sistema compara cenários
+4. Resultados são retornados ao frontend
+5. Usuário visualiza:
+   - parcelas;
+   - custo total;
+   - comparação;
+   - recomendação personalizada.
 
 ---
 
-## 📈 Possíveis Evoluções
+# 📥 Dados de Entrada
 
-- Integração com APIs bancárias  
-- Inteligência artificial para recomendações  
-- Simulações mais avançadas  
-- Dashboard financeiro  
-
----
-
-## 📌 Status do Projeto
-
-Em desenvolvimento (Projeto acadêmico - CCE)
+- Valor do imóvel
+- Entrada
+- Taxa de juros
+- Prazo
+- Valor do lance
+- Perfil financeiro
+- Objetivo do usuário
+- Urgência de aquisição
 
 ---
 
-## 📄 Licença
+# 📤 Dados Gerados
 
-Este projeto é de caráter acadêmico, desenvolvido exclusivamente para fins educacionais.
+- Parcelas mensais
+- Custo total
+- Comparação entre modalidades
+- Impacto do lance
+- Estimativa de contemplação
+- Recomendação automática
+
+---
+
+# 🛠️ Como Executar o Projeto
+
+## Pré-requisitos
+
+- Node.js 18+
+- PostgreSQL instalado
+
+---
+
+## Backend
+
+```bash
+cd Backend
+npm install
+npm run dev
+```
+
+---
+
+## Frontend
+
+```bash
+cd Frontend
+npm install
+npm run dev
+```
+
+---
+
+# 🧪 Status do Projeto
+
+🚧 Em desenvolvimento — Fase 2 do projeto acadêmico CCE.
+
+---
+
+# 🔗 Ambientes Colaborativos
+
+GitHub:
+https://github.com/GuilhermeEijiY/SimuladorCasaCerta
+
+Trello:
+https://trello.com/b/chWzUxG7/simulador-casa-certa
+
+Documentação:
+https://docs.google.com/document/d/1OlmD1Z8pGnTow8EvsyPQOIwWPt4aUofzTxSWpQflb9M
+
+---
+
+# 📈 Possíveis Evoluções
+
+- Integração com APIs bancárias
+- Dashboard financeiro
+- Exportação de relatórios
+- Inteligência artificial para recomendações
+- Simulações avançadas
+
+---
+
+# 📄 Licença
+
+Projeto desenvolvido exclusivamente para fins acadêmicos e educacionais.
