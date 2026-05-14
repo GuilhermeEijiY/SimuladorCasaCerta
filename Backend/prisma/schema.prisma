@@ -7,36 +7,76 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
-  id         String      @id @default(uuid())
-  nome       String
-  email      String      @unique
-  senha      String
-  criadoEm   DateTime    @default(now()) @map("criado_em")
-  simulacoes Simulacao[]
+model User {
+  id           String       @id @default(uuid())
+  name         String
+  email        String       @unique
+  passwordHash String       @map("password_hash")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  simulations  Simulation[]
 
-  @@map("usuarios")
+  @@map("users")
 }
 
-model Simulacao {
-  id                  String   @id @default(uuid())
-  usuarioId           String   @map("usuario_id")
-  valorImovel         Float    @map("valor_imovel")
-  entrada             Float
-  prazoMeses          Int      @map("prazo_meses")
-  taxaJurosAnual      Float    @map("taxa_juros_anual")
-  taxaAdministrativa  Float    @map("taxa_administrativa")
-  valorLance          Float?   @map("valor_lance")
-  rendaMensal         Float    @map("renda_mensal")
-  objetivo            String
-  urgencia            String
-  resultadoSac        Json     @map("resultado_sac")
-  resultadoPrice      Json     @map("resultado_price")
-  resultadoConsorcio  Json     @map("resultado_consorcio")
-  recomendacao        Json
-  criadoEm            DateTime @default(now()) @map("criado_em")
+model Simulation {
+  id              String             @id @default(uuid())
+  userId          String             @map("user_id")
+  propertyValue   Decimal            @map("property_value") @db.Decimal(12, 2)
+  downPayment     Decimal            @map("down_payment") @db.Decimal(12, 2)
+  monthlyIncome   Decimal            @map("monthly_income") @db.Decimal(12, 2)
+  interestRate    Decimal            @map("interest_rate") @db.Decimal(8, 6)
+  termMonths      Int                @map("term_months")
+  adminFee        Decimal            @map("admin_fee") @db.Decimal(8, 6)
+  bidValue        Decimal?           @map("bid_value") @db.Decimal(12, 2)
+  objective       String
+  urgency         String
+  createdAt       DateTime           @default(now()) @map("created_at")
+  user            User               @relation(fields: [userId], references: [id])
+  financingResults FinancingResult[]
+  consortiumResult ConsortiumResult?
+  recommendation   Recommendation?
 
-  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  @@map("simulations")
+}
 
-  @@map("simulacoes")
+model FinancingResult {
+  id               String     @id @default(uuid())
+  simulationId     String     @map("simulation_id")
+  financingType    String     @map("financing_type")
+  financedAmount   Decimal    @map("financed_amount") @db.Decimal(12, 2)
+  firstInstallment Decimal    @map("first_installment") @db.Decimal(12, 2)
+  lastInstallment  Decimal    @map("last_installment") @db.Decimal(12, 2)
+  totalCost        Decimal    @map("total_cost") @db.Decimal(12, 2)
+  totalInterest    Decimal    @map("total_interest") @db.Decimal(12, 2)
+  simulation       Simulation @relation(fields: [simulationId], references: [id])
+
+  @@map("financing_results")
+}
+
+model ConsortiumResult {
+  id                     String     @id @default(uuid())
+  simulationId           String     @unique @map("simulation_id")
+  creditValue            Decimal    @map("credit_value") @db.Decimal(12, 2)
+  monthlyPayment         Decimal    @map("monthly_payment") @db.Decimal(12, 2)
+  adminFeeTotal          Decimal    @map("admin_fee_total") @db.Decimal(12, 2)
+  bidValue               Decimal    @map("bid_value") @db.Decimal(12, 2)
+  estimatedContemplation Int        @map("estimated_contemplation")
+  totalCost              Decimal    @map("total_cost") @db.Decimal(12, 2)
+  simulation             Simulation @relation(fields: [simulationId], references: [id])
+
+  @@map("consortium_results")
+}
+
+model Recommendation {
+  id                String     @id @default(uuid())
+  simulationId      String     @unique @map("simulation_id")
+  recommendedOption String     @map("recommended_option")
+  reason            String
+  scoreFinancing    Decimal    @map("score_financing") @db.Decimal(5, 2)
+  scoreConsortium   Decimal    @map("score_consortium") @db.Decimal(5, 2)
+  savingsEstimate   Decimal    @map("savings_estimate") @db.Decimal(12, 2)
+  simulation        Simulation @relation(fields: [simulationId], references: [id])
+
+  @@map("recommendations")
 }
