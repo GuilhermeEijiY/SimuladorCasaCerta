@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: casacerta-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: casacerta
+      POSTGRES_PASSWORD: casacerta123
+      POSTGRES_DB: casacerta
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: casacerta-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://casacerta:casacerta123@postgres:5432/casacerta
+      JWT_SECRET: super-secret-key-change-in-production
+      PORT: 3000
+    depends_on:
+      - postgres
+    volumes:
+      - ./Backend/src:/app/src
+      - ./shared:/app/shared
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: casacerta-web
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:3000
+    depends_on:
+      - backend
+    volumes:
+      - ./Frontend/src:/app/src
+      - ./shared:/app/shared
+
+volumes:
+  pgdata:
