@@ -237,15 +237,10 @@ Lucas Tanaka, potencial comprador de imóvel.
 ```txt
 https://github.com/GuilhermeEijiY/SimuladorCasaCerta
 ```
-## Trello (fase 1)
+## Trello 
 
 ```txt
 https://trello.com/b/chWzUxG7/simulador-casa-certa
-```
-## Jira (fase 2)
-
-```txt
-https://casacerta.atlassian.net/jira/software/projects/SCRUM/boards/1?atlOrigin=eyJpIjoiZjRkNWRjMDA2OTMwNDNjYmIxOGY3ZjYyODE2NDI5ZGYiLCJwIjoiaiJ9
 ```
 
 ## Documentação
