@@ -30,7 +30,6 @@ services:
       - postgres
     volumes:
       - ./Backend/src:/app/src
-      - ./shared:/app/shared
 
   frontend:
     build:
@@ -46,7 +45,6 @@ services:
       - backend
     volumes:
       - ./Frontend/src:/app/src
-      - ./shared:/app/shared
 
 volumes:
   pgdata:

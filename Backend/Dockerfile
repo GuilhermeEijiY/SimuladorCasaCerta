@@ -10,4 +10,4 @@ COPY src ./src
 
 EXPOSE 3000
 
-CMD ["npx", "nodemon", "--exec", "npx ts-node src/index.ts", "--ext", "ts"]
+CMD ["npx", "nodemon", "--exec", "npx ts-node src/server.ts", "--ext", "ts"]
