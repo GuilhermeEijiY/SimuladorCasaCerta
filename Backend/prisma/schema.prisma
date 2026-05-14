@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id         String      @id @default(uuid())
+  nome       String
+  email      String      @unique
+  senha      String
+  criadoEm   DateTime    @default(now()) @map("criado_em")
+  simulacoes Simulacao[]
+
+  @@map("usuarios")
+}
+
+model Simulacao {
+  id                  String   @id @default(uuid())
+  usuarioId           String   @map("usuario_id")
+  valorImovel         Float    @map("valor_imovel")
+  entrada             Float
+  prazoMeses          Int      @map("prazo_meses")
+  taxaJurosAnual      Float    @map("taxa_juros_anual")
+  taxaAdministrativa  Float    @map("taxa_administrativa")
+  valorLance          Float?   @map("valor_lance")
+  rendaMensal         Float    @map("renda_mensal")
+  objetivo            String
+  urgencia            String
+  resultadoSac        Json     @map("resultado_sac")
+  resultadoPrice      Json     @map("resultado_price")
+  resultadoConsorcio  Json     @map("resultado_consorcio")
+  recomendacao        Json
+  criadoEm            DateTime @default(now()) @map("criado_em")
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+
+  @@map("simulacoes")
+}
