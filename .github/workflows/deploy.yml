@@ -27,6 +27,8 @@ jobs:
       - name: Build do projeto
         working-directory: ./Frontend
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VITE_API_URL: https://casacerta-api.vercel.app/api/v1
 
       - name: Deploy na Vercel
         id: deploy
