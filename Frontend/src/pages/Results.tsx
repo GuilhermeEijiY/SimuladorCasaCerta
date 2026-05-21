@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Simulation } from "../api/simulation.api";
 import { Button } from "../components/ui/Button";
+import { generatePdf } from "../utils/generate-pdf";
 
 function currency(value: string | number) {
   return Number(value).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -50,6 +51,18 @@ export function Results() {
             </div>
           </div>
         </div>
+
+        {rec.aiReason && (
+          <div className="bg-white rounded-xl shadow-sm border border-blue-200 p-6 mb-8">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xl">&#129302;</span>
+              <h3 className="text-lg font-bold text-gray-900">Análise do Consultor IA</h3>
+            </div>
+            <div className="text-gray-700 leading-relaxed whitespace-pre-line">
+              {rec.aiReason}
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className={`bg-white rounded-xl shadow-sm p-6 border-2 ${isRecommended("FINANCING_SAC") ? "border-emerald-500" : "border-gray-100"}`}>
@@ -158,9 +171,12 @@ export function Results() {
           </div>
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex justify-center gap-4">
           <Button onClick={() => navigate("/simulacao")} variant="secondary">
             Nova Simulação
+          </Button>
+          <Button onClick={() => generatePdf(simulation)}>
+            Exportar PDF
           </Button>
         </div>
       </div>

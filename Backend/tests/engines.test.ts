@@ -89,12 +89,16 @@ describe("Engine Recomendação", () => {
   const price = calculatePrice({ financedAmount: 280000, interestRate: 0.0095, termMonths: 360 });
   const consortium = calculateConsortium({ creditValue: 280000, adminFee: 0.0018, termMonths: 200, bidValue: 30000 });
 
-  it("deve recomendar financiamento quando urgência é alta", () => {
+  it("deve recomendar financiamento quando urgência é alta e renda é compatível", () => {
+    const sacCaro = calculateSac({ financedAmount: 100000, interestRate: 0.007, termMonths: 120 });
+    const priceCaro = calculatePrice({ financedAmount: 100000, interestRate: 0.007, termMonths: 120 });
+    const consorcioSimilar = calculateConsortium({ creditValue: 100000, adminFee: 0.0025, termMonths: 120, bidValue: 0 });
+
     const result = calculateRecommendation({
-      sac,
-      price,
-      consortium,
-      monthlyIncome: 8000,
+      sac: sacCaro,
+      price: priceCaro,
+      consortium: consorcioSimilar,
+      monthlyIncome: 15000,
       urgency: "ALTA",
     });
 

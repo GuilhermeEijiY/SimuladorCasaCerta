@@ -36,6 +36,7 @@ export interface Recommendation {
   id: string;
   recommendedOption: string;
   reason: string;
+  aiReason: string | null;
   scoreFinancing: string;
   scoreConsortium: string;
   savingsEstimate: string;

@@ -5,6 +5,7 @@ import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
 import { Simulation } from "../pages/Simulation";
 import { Results } from "../pages/Results";
+import { History } from "../pages/History";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { token, loading } = useAuth();
@@ -31,6 +32,14 @@ export function AppRoutes() {
         element={
           <PrivateRoute>
             <Results />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/historico"
+        element={
+          <PrivateRoute>
+            <History />
           </PrivateRoute>
         }
       />

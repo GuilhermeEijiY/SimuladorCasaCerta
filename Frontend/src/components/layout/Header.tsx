@@ -22,6 +22,9 @@ export function Header() {
               <Link to="/simulacao" className="text-gray-600 hover:text-emerald-600 no-underline">
                 Simular
               </Link>
+              <Link to="/historico" className="text-gray-600 hover:text-emerald-600 no-underline">
+                Histórico
+              </Link>
               <span className="text-gray-500 text-sm">Olá, {user.name.split(" ")[0]}</span>
               <button
                 onClick={handleLogout}

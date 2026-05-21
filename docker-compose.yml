@@ -6,7 +6,7 @@ services:
     container_name: casacerta-db
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "5434:5432"
     environment:
       POSTGRES_USER: casacerta
       POSTGRES_PASSWORD: casacerta123
@@ -26,6 +26,7 @@ services:
       DATABASE_URL: postgresql://casacerta:casacerta123@postgres:5432/casacerta
       JWT_SECRET: super-secret-key-change-in-production
       PORT: 3000
+      GROQ_API_KEY: ${GROQ_API_KEY}
     depends_on:
       - postgres
     volumes:
@@ -40,7 +41,7 @@ services:
     ports:
       - "5173:5173"
     environment:
-      VITE_API_URL: http://localhost:3000
+      VITE_API_URL: http://localhost:3000/api/v1
     depends_on:
       - backend
     volumes:

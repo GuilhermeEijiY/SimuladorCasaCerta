@@ -4,6 +4,7 @@ import { calculateSac } from "./engines/financing-sac.engine";
 import { calculatePrice } from "./engines/financing-price.engine";
 import { calculateConsortium } from "./engines/consortium.engine";
 import { calculateRecommendation } from "./engines/recommendation.engine";
+import { generateAiRecommendation } from "./engines/ai-recommendation.engine";
 
 const repository = new SimulationRepository();
 
@@ -38,6 +39,24 @@ export class SimulationService {
       urgency: data.urgency,
     });
 
+    let aiReason: string | null = null;
+    try {
+      aiReason = await generateAiRecommendation({
+        sac,
+        price,
+        consortium,
+        recommendation,
+        monthlyIncome: data.monthlyIncome,
+        urgency: data.urgency,
+        objective: data.objective,
+        propertyValue: data.propertyValue,
+        downPayment: data.downPayment,
+        termMonths: data.termMonths,
+      });
+    } catch (err) {
+      console.error("Erro ao gerar recomendação IA:", err);
+    }
+
     const simulation = await repository.create({
       userId,
       input: data,
@@ -45,6 +64,7 @@ export class SimulationService {
       price,
       consortium,
       recommendation,
+      aiReason,
     });
 
     return simulation;

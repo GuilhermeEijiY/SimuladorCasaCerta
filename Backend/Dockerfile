@@ -5,9 +5,12 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
+COPY prisma ./prisma
+RUN npx prisma generate
+
 COPY tsconfig.json ./
 COPY src ./src
 
 EXPOSE 3000
 
-CMD ["npx", "nodemon", "--exec", "npx ts-node src/server.ts", "--ext", "ts"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npx nodemon --exec 'npx ts-node src/server.ts' --ext ts"]

@@ -22,10 +22,14 @@ export function authMiddleware(req: Request, _res: Response, next: NextFunction)
     throw new AppError(401, "Token não fornecido");
   }
 
-  const token = header.split(" ")[1];
+  const token = header.split(" ")[1] as string | undefined;
+
+  if (!token) {
+    throw new AppError(401, "Token não fornecido");
+  }
 
   try {
-    const payload = jwt.verify(token, env.JWT_SECRET) as AuthPayload;
+    const payload = jwt.verify(token, env.JWT_SECRET) as unknown as AuthPayload;
     req.userId = payload.userId;
     next();
   } catch {

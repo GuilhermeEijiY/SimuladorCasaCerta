@@ -12,6 +12,7 @@ interface PersistSimulationData {
   price: PriceOutput;
   consortium: ConsortiumOutput;
   recommendation: RecommendationOutput;
+  aiReason: string | null;
 }
 
 export class SimulationRepository {
@@ -66,6 +67,7 @@ export class SimulationRepository {
           create: {
             recommendedOption: data.recommendation.recommendedOption,
             reason: data.recommendation.reason,
+            aiReason: data.aiReason,
             scoreFinancing: data.recommendation.scoreFinancing,
             scoreConsortium: data.recommendation.scoreConsortium,
             savingsEstimate: data.recommendation.savingsEstimate,
