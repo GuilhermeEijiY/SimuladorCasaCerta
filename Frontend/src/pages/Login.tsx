@@ -30,12 +30,17 @@ export function Login() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-73px)] flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">Entrar</h1>
+    <div className="min-h-[calc(100vh-73px)] flex items-center justify-center bg-gradient-to-br from-brand-50 to-accent-50 px-4 py-12">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-md border border-gray-100 p-8">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-gray-900">Entrar</h1>
+          <p className="text-gray-500 text-sm mt-1">Acesse sua conta para simular</p>
+        </div>
 
         {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">{error}</div>
+          <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg mb-4 text-sm font-medium">
+            {error}
+          </div>
         )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -53,14 +58,14 @@ export function Login() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <Button type="submit" disabled={loading} className="mt-2">
-            {loading ? "Entrando..." : "Entrar"}
+          <Button type="submit" size="lg" isLoading={loading} className="mt-2 w-full">
+            Entrar
           </Button>
         </form>
 
         <p className="text-center text-gray-500 text-sm mt-6">
           Não tem conta?{" "}
-          <Link to="/register" className="text-emerald-600 hover:underline">
+          <Link to="/register" className="text-brand-600 font-medium hover:underline">
             Cadastre-se
           </Link>
         </p>

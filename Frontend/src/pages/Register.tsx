@@ -31,12 +31,17 @@ export function Register() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-73px)] flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">Criar Conta</h1>
+    <div className="min-h-[calc(100vh-73px)] flex items-center justify-center bg-gradient-to-br from-brand-50 to-accent-50 px-4 py-12">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-md border border-gray-100 p-8">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-gray-900">Criar conta</h1>
+          <p className="text-gray-500 text-sm mt-1">Comece a comparar suas opções</p>
+        </div>
 
         {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">{error}</div>
+          <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg mb-4 text-sm font-medium">
+            {error}
+          </div>
         )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -62,14 +67,14 @@ export function Register() {
             minLength={6}
             required
           />
-          <Button type="submit" disabled={loading} className="mt-2">
-            {loading ? "Criando conta..." : "Cadastrar"}
+          <Button type="submit" size="lg" isLoading={loading} className="mt-2 w-full">
+            Cadastrar
           </Button>
         </form>
 
         <p className="text-center text-gray-500 text-sm mt-6">
           Já tem conta?{" "}
-          <Link to="/login" className="text-emerald-600 hover:underline">
+          <Link to="/login" className="text-brand-600 font-medium hover:underline">
             Entrar
           </Link>
         </p>
