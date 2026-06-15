@@ -25,9 +25,12 @@ export function History() {
   }, []);
 
   if (loading) {
-    return (
+    return(
       <div className="min-h-[calc(100vh-73px)] flex items-center justify-center bg-gray-50">
-        <p className="text-gray-500">Carregando...</p>
+        <div className="flex items-center gap-3 text-gray-500">
+          <span className="w-5 h-5 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
+          Carregando...
+        </div>
       </div>
     );
   }
@@ -44,11 +47,13 @@ export function History() {
         </div>
 
         {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm">{error}</div>
+          <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg mb-6 text-sm font-medium">
+            {error}
+          </div>
         )}
 
         {simulations.length === 0 ? (
-          <div className="text-center py-16">
+          <div className="text-center py-16 bg-white rounded-xl border border-gray-100">
             <p className="text-gray-400 mb-4">Nenhuma simulação realizada ainda.</p>
             <Button onClick={() => navigate("/simulacao")}>Fazer Primeira Simulação</Button>
           </div>
@@ -58,11 +63,11 @@ export function History() {
               <div
                 key={sim.id}
                 onClick={() => navigate("/resultado", { state: { simulation: sim } })}
-                className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 cursor-pointer hover:border-emerald-300 transition-colors"
+                className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 cursor-pointer hover:shadow-md transition-shadow"
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold text-white bg-emerald-500 px-2 py-1 rounded">
+                    <span className="text-xs font-bold text-white bg-brand-500 px-2 py-1 rounded">
                       {optionLabel(sim.recommendation.recommendedOption)}
                     </span>
                     <span className="text-sm text-gray-400">
@@ -75,7 +80,7 @@ export function History() {
                       })}
                     </span>
                   </div>
-                  <span className="text-sm text-emerald-600 font-semibold">
+                  <span className="text-sm text-brand-600 font-semibold">
                     Economia: {currency(sim.recommendation.savingsEstimate)}
                   </span>
                 </div>
