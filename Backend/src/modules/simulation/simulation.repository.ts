@@ -47,12 +47,13 @@ export class SimulationRepository {
               {
                 financingType: "PRICE",
                 financedAmount,
-                firstInstallment: data.price.fixedInstallment,
-                lastInstallment: data.price.fixedInstallment,
+                firstInstallment: data.price.firstInstallment,
+                lastInstallment: data.price.lastInstallment,
                 totalCost: data.price.totalCost,
                 totalInterest: data.price.totalInterest,
-                timeSavedMonths: null,
-                savingsWithAmortization: null,
+                timeSavedMonths: data.price.timeSavedMonths ?? null,
+                savingsWithAmortization:
+                  data.price.savingsWithAmortization ?? null,
               },
             ],
           },

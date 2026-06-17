@@ -48,6 +48,53 @@ describe("Engine PRICE", () => {
 
     expect(price.totalCost).toBeGreaterThan(sac.totalCost);
   });
+
+  it("deve reduzir prazo quando amortização extra é aplicada com estratégia PRAZO", () => {
+    const base = calculatePrice({
+      financedAmount: 280000,
+      interestRate: 0.0095,
+      termMonths: 360,
+    });
+
+    const comAmortizacao = calculatePrice({
+      financedAmount: 280000,
+      interestRate: 0.0095,
+      termMonths: 360,
+      extraAmortizationValue: 500,
+      amortizationStrategy: "PRAZO",
+    });
+
+    expect(comAmortizacao.totalCost).toBeLessThan(base.totalCost);
+    expect(comAmortizacao.timeSavedMonths).toBeGreaterThan(0);
+    expect(comAmortizacao.savingsWithAmortization).toBeGreaterThan(0);
+  });
+
+  it("deve reduzir prestação ao longo do tempo na estratégia PRESTACAO", () => {
+    const result = calculatePrice({
+      financedAmount: 280000,
+      interestRate: 0.0095,
+      termMonths: 360,
+      extraAmortizationValue: 500,
+      amortizationStrategy: "PRESTACAO",
+    });
+
+    expect(result.lastInstallment).toBeLessThan(result.firstInstallment);
+    expect(result.savingsWithAmortization).toBeGreaterThan(0);
+  });
+
+  it("não deve aplicar amortização quando estratégia é NENHUM", () => {
+    const result = calculatePrice({
+      financedAmount: 280000,
+      interestRate: 0.0095,
+      termMonths: 360,
+      extraAmortizationValue: 500,
+      amortizationStrategy: "NENHUM",
+    });
+
+    expect(result.timeSavedMonths).toBeUndefined();
+    expect(result.savingsWithAmortization).toBeUndefined();
+    expect(result.firstInstallment).toBeCloseTo(result.lastInstallment, 2);
+  });
 });
 
 describe("Engine Consórcio", () => {
