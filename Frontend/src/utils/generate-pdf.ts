@@ -9,6 +9,25 @@ function optionLabel(option: string) {
   return option.replace("FINANCING_", "Financiamento ").replace("CONSORTIUM", "Consórcio");
 }
 
+const STRATEGY_LABEL: Record<string, string> = {
+  PRAZO: "Reduzir prazo",
+  PRESTACAO: "Reduzir prestação",
+  NENHUMA: "Nenhuma",
+};
+
+const MODALITY_LABEL: Record<string, string> = {
+  SAC: "SAC",
+  PRICE: "PRICE",
+  CONSORTIUM: "Consórcio",
+  EMPATE: "Empate",
+};
+
+const FAVORS_LABEL: Record<string, string> = {
+  FINANCIAMENTO: "favorece financiamento",
+  CONSORCIO: "favorece consórcio",
+  NEUTRO: "neutro",
+};
+
 export function generatePdf(simulation: Simulation) {
   const doc = new jsPDF();
   const margin = 20;
@@ -157,6 +176,113 @@ export function generatePdf(simulation: Simulation) {
   doc.text(`Consorcio: ${Number(rec.scoreConsortium).toFixed(1)} pts`, margin + 60, y);
   doc.text(`Economia estimada: ${currency(rec.savingsEstimate)}`, margin + 120, y);
   addLine(10);
+
+  if (simulation.recommendationFactors && simulation.recommendationFactors.length > 0) {
+    checkPageBreak(60);
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(30, 30, 30);
+    doc.text("Fatores da Decisao", margin, y);
+    if (simulation.decisiveFactor) {
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(120, 120, 120);
+      doc.text(`Fator decisivo: ${simulation.decisiveFactor}`, margin + 60, y);
+    }
+    addLine(8);
+
+    doc.setFontSize(8);
+    for (const f of simulation.recommendationFactors) {
+      checkPageBreak(18);
+      const isDecisive = simulation.decisiveFactor === f.name;
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(isDecisive ? 6 : 55, isDecisive ? 95 : 65, isDecisive ? 70 : 81);
+      doc.text(
+        `${f.name}  (peso ${Math.round(f.weight * 100)}%)  -  ${FAVORS_LABEL[f.favors] ?? "neutro"}`,
+        margin,
+        y,
+      );
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(107, 114, 128);
+      doc.text(
+        `Financ: ${f.scoreFinancing.toFixed(0)}  Cons: ${f.scoreConsortium.toFixed(0)}`,
+        pageWidth - margin - 50,
+        y,
+      );
+      addLine(4);
+
+      doc.setTextColor(120, 120, 120);
+      const explLines = doc.splitTextToSize(f.explanation, contentWidth);
+      for (const line of explLines) {
+        checkPageBreak(4);
+        doc.text(line, margin, y);
+        addLine(4);
+      }
+      addLine(2);
+    }
+    addLine(4);
+  }
+
+  if (simulation.scenarios) {
+    const insights = simulation.scenarios.insights;
+    checkPageBreak(40);
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(30, 30, 30);
+    doc.text("Cenarios Alternativos", margin, y);
+    addLine(7);
+
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(75, 85, 99);
+
+    const insightLines = [
+      `Amortizacao no SAC pode economizar ate ${currency(insights.amortizationImpactSac)}`,
+      `Amortizacao no PRICE pode economizar ate ${currency(insights.amortizationImpactPrice)}`,
+      `Melhor estrategia: ${STRATEGY_LABEL[insights.bestAmortizationStrategy] ?? insights.bestAmortizationStrategy} - modalidade ${MODALITY_LABEL[insights.bestAmortizationModality] ?? insights.bestAmortizationModality}`,
+      `Sensibilidade a taxa (variacao de 0,1%): ${currency(insights.rateSensitivity)}`,
+      `Impacto do reajuste no consorcio: ${currency(insights.consortiumIndexImpact)}`,
+    ];
+    for (const line of insightLines) {
+      checkPageBreak(5);
+      doc.text(`- ${line}`, margin, y);
+      addLine(4.5);
+    }
+    addLine(4);
+
+    checkPageBreak(20);
+    doc.setFillColor(243, 244, 246);
+    doc.rect(margin, y, contentWidth, 7, "F");
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(55, 65, 81);
+    doc.text("Cenario", margin + 3, y + 5);
+    doc.text("Modalidade", margin + 88, y + 5);
+    doc.text("Custo total", margin + 118, y + 5);
+    doc.text("Economia", margin + 150, y + 5);
+    addLine(8);
+
+    doc.setFont("helvetica", "normal");
+    for (const s of simulation.scenarios.scenarios) {
+      checkPageBreak(6);
+      doc.setTextColor(55, 65, 81);
+      doc.text(s.label.length > 45 ? s.label.slice(0, 42) + "..." : s.label, margin + 3, y);
+      doc.text(MODALITY_LABEL[s.modality] ?? s.modality, margin + 88, y);
+      doc.text(currency(s.totalCost), margin + 118, y);
+      const ec = s.savingsVsBaseline;
+      if (ec === 0) {
+        doc.setTextColor(160, 160, 160);
+        doc.text("-", margin + 150, y);
+      } else {
+        doc.setTextColor(ec > 0 ? 5 : 220, ec > 0 ? 150 : 38, ec > 0 ? 105 : 38);
+        doc.text(currency(ec), margin + 150, y);
+      }
+      addLine(5);
+    }
+    addLine(4);
+  }
 
   if (rec.aiReason) {
     checkPageBreak(60);
