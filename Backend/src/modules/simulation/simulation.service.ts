@@ -37,14 +37,6 @@ export class SimulationService {
       consortiumIndex: data.consortiumIndex,
     });
 
-    const recommendation = calculateRecommendation({
-      sac,
-      price,
-      consortium,
-      monthlyIncome: data.monthlyIncome,
-      urgency: data.urgency,
-    });
-
     const scenarios = calculateScenarios({
       financedAmount,
       interestRate: data.interestRate,
@@ -53,6 +45,15 @@ export class SimulationService {
       bidValue: data.bidValue,
       consortiumIndex: data.consortiumIndex,
       extraAmortizationValue: data.extraAmortizationValue,
+    });
+
+    const recommendation = calculateRecommendation({
+      sac,
+      price,
+      consortium,
+      monthlyIncome: data.monthlyIncome,
+      urgency: data.urgency,
+      scenariosInsights: scenarios.insights,
     });
 
     const chartData = sac.monthlyData.map((sacData) => {
@@ -92,6 +93,7 @@ export class SimulationService {
           price,
           consortium,
           recommendation,
+          scenarios,
           monthlyIncome: data.monthlyIncome,
           urgency: data.urgency,
           objective: data.objective,
@@ -118,7 +120,13 @@ export class SimulationService {
       aiReason,
     });
 
-    return { ...simulation, chartData, scenarios };
+    return {
+      ...simulation,
+      chartData,
+      scenarios,
+      recommendationFactors: recommendation.factors,
+      decisiveFactor: recommendation.decisiveFactor,
+    };
   }
 
   async list(userId: string) {

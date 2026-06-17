@@ -179,6 +179,53 @@ describe("Engine Recomendação", () => {
 
     expect(result.reason.length).toBeGreaterThan(20);
   });
+
+  it("deve retornar fatores estruturados de decisão", () => {
+    const result = calculateRecommendation({
+      sac,
+      price,
+      consortium,
+      monthlyIncome: 12000,
+      urgency: "MEDIA",
+    });
+
+    expect(result.factors.length).toBe(5);
+    const nomes = result.factors.map((f) => f.name);
+    expect(nomes).toContain("Custo total");
+    expect(nomes).toContain("Comprometimento de renda");
+    expect(nomes).toContain("Urgência");
+    expect(nomes).toContain("Previsibilidade");
+    expect(nomes).toContain("Flexibilidade");
+    result.factors.forEach((f) => {
+      expect(f.explanation.length).toBeGreaterThan(10);
+      expect(["FINANCIAMENTO", "CONSORCIO", "NEUTRO"]).toContain(f.favors);
+    });
+  });
+
+  it("deve identificar o fator decisivo da recomendação", () => {
+    const result = calculateRecommendation({
+      sac,
+      price,
+      consortium,
+      monthlyIncome: 12000,
+      urgency: "ALTA",
+    });
+
+    expect(result.decisiveFactor).toBeTruthy();
+    expect(result.factors.map((f) => f.name)).toContain(result.decisiveFactor);
+  });
+
+  it("deve gerar reason explicativo citando o fator decisivo", () => {
+    const result = calculateRecommendation({
+      sac,
+      price,
+      consortium,
+      monthlyIncome: 12000,
+      urgency: "ALTA",
+    });
+
+    expect(result.reason).toContain(result.decisiveFactor);
+  });
 });
 
 describe("Engine Cenários", () => {
