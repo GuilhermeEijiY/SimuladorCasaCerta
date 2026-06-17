@@ -48,7 +48,6 @@ export function calculateSac(input: SacInput): SacOutput {
     const interest = balance * interestRate;
     let installment = amortization + interest;
 
-    // Aplicar amortização extra
     let currentExtra = 0;
     if (amortizationStrategy !== "NENHUM" && extraAmortizationValue > 0) {
       currentExtra = Math.min(extraAmortizationValue, balance - amortization);

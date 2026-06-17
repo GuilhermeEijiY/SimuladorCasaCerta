@@ -147,7 +147,6 @@ export function Simulation() {
             </div>
           </div>
 
-          {/* INÍCIO DO BLOCO NOVO: OPÇÕES AVANÇADAS */}
           <div className="mt-6 border-t pt-6">
             <button
               type="button"

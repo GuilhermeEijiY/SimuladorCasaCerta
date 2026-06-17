@@ -1,11 +1,18 @@
 import { InputHTMLAttributes, useId } from "react";
+import React from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
 }
 
-export function Input({ label, error, className = "", id, ...props }: InputProps) {
+export function Input({
+  label,
+  error,
+  className = "",
+  id,
+  ...props
+}: InputProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const errorId = `${inputId}-error`;
@@ -16,14 +23,13 @@ export function Input({ label, error, className = "", id, ...props }: InputProps
         {label}
       </label>
       <input
-        id={inputId}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={error ? errorId : undefined}
-        className={`px-4 py-3 border rounded-lg bg-white text-gray-900 transition-colors placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:border-transparent ${
-          error
-            ? "border-red-500 focus:ring-red-500"
-            : "border-gray-300 focus:ring-brand-500"
+        className={`px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
+          error ? "border-red-500 focus:ring-red-500" : "border-gray-300"
         } ${className}`}
+        onFocus={(e) => {
+          e.target.select(); // Seleciona o texto todo ao clicar!
+          if (props.onFocus) props.onFocus(e);
+        }}
         {...props}
       />
       {error && (

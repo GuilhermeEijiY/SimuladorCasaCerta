@@ -158,7 +158,6 @@ export function Results() {
           </div>
         )}
 
-        {/* BLOCO NOVO: CARDS DE IMPACTO AVANÇADO */}
         {(sac.timeSavedMonths || consortium.readjustmentEstimate) && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {sac.timeSavedMonths ? (
