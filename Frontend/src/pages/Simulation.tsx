@@ -30,6 +30,35 @@ export function Simulation() {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
+  function updateExtraAmortization(value: number) {
+    setForm((prev) => ({
+      ...prev,
+      extraAmortizationValue: value,
+      amortizationStrategy:
+        value > 0 && prev.amortizationStrategy === "NENHUM"
+          ? "PRAZO"
+          : prev.amortizationStrategy,
+    }));
+  }
+
+  function updateAmortizationStrategy(
+    strategy: SimulationInput["amortizationStrategy"]
+  ) {
+    setForm((prev) => ({
+      ...prev,
+      amortizationStrategy: strategy,
+      extraAmortizationValue:
+        strategy === "NENHUM" ? 0 : prev.extraAmortizationValue,
+    }));
+  }
+
+  const amortizationHint =
+    form.amortizationStrategy === "PRAZO"
+      ? "Aporte mensal extra que reduz o tempo total do financiamento."
+      : form.amortizationStrategy === "PRESTACAO"
+      ? "Aporte mensal extra que reduz o valor das próximas parcelas."
+      : "Sem aporte extra. Selecione um tipo para ativar.";
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const result = await simulate(form);
@@ -159,15 +188,26 @@ export function Simulation() {
 
             {showAdvanced && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <Input
-                  label="Amortização Extra Mensal (R$)"
-                  type="number"
-                  value={form.extraAmortizationValue}
-                  onChange={(e) =>
-                    update("extraAmortizationValue", Number(e.target.value))
-                  }
-                  min={0}
-                />
+                <div>
+                  <Input
+                    label="Amortização Extra Mensal (R$)"
+                    type="number"
+                    value={form.extraAmortizationValue}
+                    onChange={(e) =>
+                      updateExtraAmortization(Number(e.target.value))
+                    }
+                    min={0}
+                    disabled={form.amortizationStrategy === "NENHUM"}
+                    className={
+                      form.amortizationStrategy === "NENHUM"
+                        ? "bg-gray-100 cursor-not-allowed text-gray-400"
+                        : ""
+                    }
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    {amortizationHint}
+                  </p>
+                </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-sm font-medium text-gray-700">
                     Tipo de Amortização
@@ -175,7 +215,9 @@ export function Simulation() {
                   <select
                     value={form.amortizationStrategy}
                     onChange={(e) =>
-                      update("amortizationStrategy", e.target.value)
+                      updateAmortizationStrategy(
+                        e.target.value as SimulationInput["amortizationStrategy"]
+                      )
                     }
                     className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
                   >

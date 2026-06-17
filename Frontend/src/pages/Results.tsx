@@ -21,6 +21,25 @@ function currency(value: string | number) {
   });
 }
 
+const STRATEGY_LABEL: Record<string, string> = {
+  PRAZO: "Reduzir prazo",
+  PRESTACAO: "Reduzir prestação",
+  NENHUMA: "Nenhuma",
+};
+
+const MODALITY_LABEL: Record<string, string> = {
+  SAC: "SAC",
+  PRICE: "PRICE",
+  CONSORTIUM: "Consórcio",
+  EMPATE: "Empate",
+};
+
+const FACTOR_BADGE: Record<string, string> = {
+  FINANCIAMENTO: "bg-blue-50 text-blue-700",
+  CONSORCIO: "bg-teal-50 text-teal-700",
+  NEUTRO: "bg-gray-100 text-gray-600",
+};
+
 export function Results() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -322,6 +341,213 @@ export function Results() {
             </div>
           </div>
         </div>
+
+        {simulation.recommendationFactors &&
+          simulation.recommendationFactors.length > 0 && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Fatores da Decisão
+              </h3>
+              <p className="text-sm text-gray-500 mb-6">
+                {simulation.decisiveFactor ? (
+                  <>
+                    Fator decisivo:{" "}
+                    <span className="font-semibold text-gray-700">
+                      {simulation.decisiveFactor}
+                    </span>
+                  </>
+                ) : (
+                  "Pontuação por dimensão de avaliação."
+                )}
+              </p>
+              <div className="space-y-5">
+                {simulation.recommendationFactors.map((f) => {
+                  const total = f.scoreFinancing + f.scoreConsortium || 1;
+                  const finPct = (f.scoreFinancing / total) * 100;
+                  const isDecisive = simulation.decisiveFactor === f.name;
+                  return (
+                    <div key={f.name}>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`text-sm font-semibold ${
+                              isDecisive ? "text-emerald-700" : "text-gray-800"
+                            }`}
+                          >
+                            {f.name}
+                            {isDecisive && (
+                              <span className="ml-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+                                DECISIVO
+                              </span>
+                            )}
+                          </span>
+                          <span className="text-xs text-gray-400">
+                            peso {Math.round(f.weight * 100)}%
+                          </span>
+                        </div>
+                        <span
+                          className={`text-xs font-semibold px-2 py-0.5 rounded ${
+                            FACTOR_BADGE[f.favors] ?? FACTOR_BADGE.NEUTRO
+                          }`}
+                        >
+                          {f.favors === "FINANCIAMENTO"
+                            ? "favorece financiamento"
+                            : f.favors === "CONSORCIO"
+                            ? "favorece consórcio"
+                            : "neutro"}
+                        </span>
+                      </div>
+                      <div className="flex h-2 rounded-full overflow-hidden bg-gray-100">
+                        <div
+                          className="bg-blue-500"
+                          style={{ width: `${finPct}%` }}
+                          title={`Financiamento: ${f.scoreFinancing.toFixed(0)}`}
+                        />
+                        <div
+                          className="bg-teal-500"
+                          style={{ width: `${100 - finPct}%` }}
+                          title={`Consórcio: ${f.scoreConsortium.toFixed(0)}`}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+                        {f.explanation}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+        {simulation.scenarios && simulation.scenarios.scenarios.length > 0 && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              Cenários Alternativos
+            </h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Compare estratégias de amortização, sensibilidade à taxa de juros
+              e reajuste do consórcio.
+            </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+              <div className="bg-blue-50 rounded-lg p-4">
+                <p className="text-xs text-blue-700 font-medium uppercase">
+                  Amortização no SAC pode economizar até
+                </p>
+                <p className="text-lg font-bold text-blue-900 mt-1">
+                  {currency(simulation.scenarios.insights.amortizationImpactSac)}
+                </p>
+              </div>
+              <div className="bg-indigo-50 rounded-lg p-4">
+                <p className="text-xs text-indigo-700 font-medium uppercase">
+                  Amortização no PRICE pode economizar até
+                </p>
+                <p className="text-lg font-bold text-indigo-900 mt-1">
+                  {currency(
+                    simulation.scenarios.insights.amortizationImpactPrice
+                  )}
+                </p>
+              </div>
+              <div className="bg-emerald-50 rounded-lg p-4">
+                <p className="text-xs text-emerald-700 font-medium uppercase">
+                  Melhor estratégia
+                </p>
+                <p className="text-lg font-bold text-emerald-900 mt-1">
+                  {STRATEGY_LABEL[
+                    simulation.scenarios.insights.bestAmortizationStrategy
+                  ] ??
+                    simulation.scenarios.insights.bestAmortizationStrategy}
+                </p>
+                <p className="text-xs text-emerald-700 mt-1">
+                  Modalidade:{" "}
+                  {MODALITY_LABEL[
+                    simulation.scenarios.insights.bestAmortizationModality
+                  ] ??
+                    simulation.scenarios.insights.bestAmortizationModality}
+                </p>
+              </div>
+              <div className="bg-purple-50 rounded-lg p-4">
+                <p className="text-xs text-purple-700 font-medium uppercase">
+                  Sensibilidade à taxa (±0,1%)
+                </p>
+                <p className="text-lg font-bold text-purple-900 mt-1">
+                  {currency(simulation.scenarios.insights.rateSensitivity)}
+                </p>
+              </div>
+              <div className="bg-orange-50 rounded-lg p-4">
+                <p className="text-xs text-orange-700 font-medium uppercase">
+                  Impacto do reajuste no consórcio
+                </p>
+                <p className="text-lg font-bold text-orange-900 mt-1">
+                  {currency(
+                    simulation.scenarios.insights.consortiumIndexImpact
+                  )}
+                </p>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-200 text-left text-xs text-gray-500 uppercase">
+                    <th className="py-2 pr-4 font-medium">Cenário</th>
+                    <th className="py-2 pr-4 font-medium">Modalidade</th>
+                    <th className="py-2 pr-4 font-medium text-right">
+                      Custo total
+                    </th>
+                    <th className="py-2 pr-4 font-medium text-right">
+                      Economia vs base
+                    </th>
+                    <th className="py-2 font-medium text-right">
+                      Tempo economizado
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {simulation.scenarios.scenarios.map((s) => (
+                    <tr
+                      key={s.id}
+                      className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
+                    >
+                      <td className="py-2 pr-4">
+                        <div className="font-medium text-gray-800">
+                          {s.label}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {s.description}
+                        </div>
+                      </td>
+                      <td className="py-2 pr-4 text-gray-600">
+                        {MODALITY_LABEL[s.modality] ?? s.modality}
+                      </td>
+                      <td className="py-2 pr-4 text-right font-semibold text-gray-800">
+                        {currency(s.totalCost)}
+                      </td>
+                      <td
+                        className={`py-2 pr-4 text-right font-semibold ${
+                          s.savingsVsBaseline > 0
+                            ? "text-emerald-600"
+                            : s.savingsVsBaseline < 0
+                            ? "text-red-500"
+                            : "text-gray-400"
+                        }`}
+                      >
+                        {s.savingsVsBaseline === 0
+                          ? "—"
+                          : currency(s.savingsVsBaseline)}
+                      </td>
+                      <td className="py-2 text-right text-gray-600">
+                        {s.timeSavedMonths
+                          ? `${s.timeSavedMonths} meses`
+                          : "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         <div className="flex justify-center gap-4">
           <Button onClick={() => navigate("/simulacao")} variant="secondary">
