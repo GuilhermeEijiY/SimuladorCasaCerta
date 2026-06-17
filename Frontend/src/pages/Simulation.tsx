@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import React, { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSimulation } from "../hooks/useSimulation";
 import { SimulationInput } from "../api/simulation.api";
@@ -8,6 +8,8 @@ import { Input } from "../components/ui/Input";
 export function Simulation() {
   const navigate = useNavigate();
   const { simulate, loading, error } = useSimulation();
+
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const [form, setForm] = useState<SimulationInput>({
     propertyValue: 350000,
@@ -19,6 +21,9 @@ export function Simulation() {
     bidValue: 0,
     objective: "MORADIA",
     urgency: "MEDIA",
+    extraAmortizationValue: 0,
+    amortizationStrategy: "NENHUM",
+    consortiumIndex: "FIXO",
   });
 
   function update(field: keyof SimulationInput, value: string | number) {
@@ -42,10 +47,15 @@ export function Simulation() {
         </p>
 
         {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm">{error}</div>
+          <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm">
+            {error}
+          </div>
         )}
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-xl shadow-sm border border-gray-100 p-8"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input
               label="Valor do imóvel (R$)"
@@ -107,7 +117,9 @@ export function Simulation() {
             />
 
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-700">Objetivo</label>
+              <label className="text-sm font-medium text-gray-700">
+                Objetivo
+              </label>
               <select
                 value={form.objective}
                 onChange={(e) => update("objective", e.target.value)}
@@ -120,7 +132,9 @@ export function Simulation() {
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-700">Urgência</label>
+              <label className="text-sm font-medium text-gray-700">
+                Urgência
+              </label>
               <select
                 value={form.urgency}
                 onChange={(e) => update("urgency", e.target.value)}
@@ -131,6 +145,62 @@ export function Simulation() {
                 <option value="ALTA">Alta</option>
               </select>
             </div>
+          </div>
+
+          {/* INÍCIO DO BLOCO NOVO: OPÇÕES AVANÇADAS */}
+          <div className="mt-6 border-t pt-6">
+            <button
+              type="button"
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="text-emerald-600 font-medium text-sm flex items-center gap-2 hover:text-emerald-700 transition-colors"
+            >
+              {showAdvanced ? "Ocultar" : "Mostrar"} Opções Avançadas
+              (Amortização e Reajustes)
+            </button>
+
+            {showAdvanced && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <Input
+                  label="Amortização Extra Mensal (R$)"
+                  type="number"
+                  value={form.extraAmortizationValue}
+                  onChange={(e) =>
+                    update("extraAmortizationValue", Number(e.target.value))
+                  }
+                  min={0}
+                />
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-gray-700">
+                    Tipo de Amortização
+                  </label>
+                  <select
+                    value={form.amortizationStrategy}
+                    onChange={(e) =>
+                      update("amortizationStrategy", e.target.value)
+                    }
+                    className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                  >
+                    <option value="NENHUM">Nenhum</option>
+                    <option value="PRAZO">Reduzir Prazo</option>
+                    <option value="PRESTACAO">Reduzir Prestação</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-gray-700">
+                    Índice do Consórcio
+                  </label>
+                  <select
+                    value={form.consortiumIndex}
+                    onChange={(e) => update("consortiumIndex", e.target.value)}
+                    className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                  >
+                    <option value="FIXO">Parcela Fixa (Sem Reajuste)</option>
+                    <option value="INCC">INCC</option>
+                    <option value="IPCA">IPCA</option>
+                  </select>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="mt-8 flex justify-end">

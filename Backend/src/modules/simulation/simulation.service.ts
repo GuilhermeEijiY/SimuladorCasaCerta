@@ -16,6 +16,8 @@ export class SimulationService {
       financedAmount,
       interestRate: data.interestRate,
       termMonths: data.termMonths,
+      extraAmortizationValue: data.extraAmortizationValue,
+      amortizationStrategy: data.amortizationStrategy,
     });
 
     const price = calculatePrice({
@@ -29,6 +31,7 @@ export class SimulationService {
       adminFee: data.adminFee,
       termMonths: data.termMonths,
       bidValue: data.bidValue,
+      consortiumIndex: data.consortiumIndex,
     });
 
     const recommendation = calculateRecommendation({
@@ -39,35 +42,67 @@ export class SimulationService {
       urgency: data.urgency,
     });
 
+    const chartData = sac.monthlyData.map((sacData) => {
+      const month = sacData.month;
+
+      const foundConsortium = consortium.monthlyData.find(
+        (c) => c.month === month
+      );
+      const fallbackConsortium =
+        consortium.monthlyData[consortium.monthlyData.length - 1];
+
+      const consortiumCost =
+        foundConsortium?.accumulatedCost ??
+        fallbackConsortium?.accumulatedCost ??
+        0;
+
+      const priceCost = (price.totalCost / data.termMonths) * month;
+
+      return {
+        month,
+        sac: sacData.accumulatedCost,
+        price: Math.round(priceCost * 100) / 100,
+        consortium: consortiumCost,
+      };
+    });
+
     let aiReason: string | null = null;
     try {
-      aiReason = await generateAiRecommendation({
-        sac,
-        price,
-        consortium,
-        recommendation,
-        monthlyIncome: data.monthlyIncome,
-        urgency: data.urgency,
-        objective: data.objective,
-        propertyValue: data.propertyValue,
-        downPayment: data.downPayment,
-        termMonths: data.termMonths,
-      });
+      if (
+        process.env.GROQ_API_KEY &&
+        process.env.GROQ_API_KEY !== "mock-key-para-passar-o-erro"
+      ) {
+        aiReason = await generateAiRecommendation({
+          sac,
+          price,
+          consortium,
+          recommendation,
+          monthlyIncome: data.monthlyIncome,
+          urgency: data.urgency,
+          objective: data.objective,
+          propertyValue: data.propertyValue,
+          downPayment: data.downPayment,
+          termMonths: data.termMonths,
+        });
+      }
     } catch (err) {
-      console.error("Erro ao gerar recomendação IA:", err);
+      console.error("Erro ao gerar recomendação IA ignorado.");
     }
+
+    const { monthlyData: _, ...cleanSac } = sac;
+    const { monthlyData: __, ...cleanConsortium } = consortium;
 
     const simulation = await repository.create({
       userId,
       input: data,
-      sac,
-      price,
-      consortium,
+      sac: cleanSac as any,
+      price: price as any,
+      consortium: cleanConsortium as any,
       recommendation,
       aiReason,
     });
 
-    return simulation;
+    return { ...simulation, chartData };
   }
 
   async list(userId: string) {

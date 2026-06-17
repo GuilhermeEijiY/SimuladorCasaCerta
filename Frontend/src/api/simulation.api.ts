@@ -10,6 +10,16 @@ export interface SimulationInput {
   bidValue: number;
   objective: "MORADIA" | "INVESTIMENTO" | "MUDANCA";
   urgency: "BAIXA" | "MEDIA" | "ALTA";
+  extraAmortizationValue?: number;
+  amortizationStrategy?: "PRAZO" | "PRESTACAO" | "NENHUM";
+  consortiumIndex?: "INCC" | "IPCA" | "FIXO";
+}
+
+export interface ChartDataPoint {
+  month: number;
+  sac: number;
+  price: number;
+  consortium: number;
 }
 
 export interface FinancingResult {
@@ -20,6 +30,8 @@ export interface FinancingResult {
   lastInstallment: string;
   totalCost: string;
   totalInterest: string;
+  timeSavedMonths?: number;
+  savingsWithAmortization?: string;
 }
 
 export interface ConsortiumResult {
@@ -30,6 +42,7 @@ export interface ConsortiumResult {
   bidValue: string;
   estimatedContemplation: number;
   totalCost: string;
+  readjustmentEstimate?: string;
 }
 
 export interface Recommendation {
@@ -53,10 +66,14 @@ export interface Simulation {
   financingResults: FinancingResult[];
   consortiumResult: ConsortiumResult;
   recommendation: Recommendation;
+  chartData?: ChartDataPoint[];
 }
 
 export async function createSimulation(input: SimulationInput) {
-  const { data } = await api.post<{ simulation: Simulation }>("/simulations", input);
+  const { data } = await api.post<{ simulation: Simulation }>(
+    "/simulations",
+    input
+  );
   return data.simulation;
 }
 
