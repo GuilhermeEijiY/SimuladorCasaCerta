@@ -5,6 +5,7 @@ import { calculatePrice } from "./engines/financing-price.engine";
 import { calculateConsortium } from "./engines/consortium.engine";
 import { calculateRecommendation } from "./engines/recommendation.engine";
 import { generateAiRecommendation } from "./engines/ai-recommendation.engine";
+import { calculateScenarios } from "./engines/scenarios.engine";
 
 const repository = new SimulationRepository();
 
@@ -42,6 +43,16 @@ export class SimulationService {
       consortium,
       monthlyIncome: data.monthlyIncome,
       urgency: data.urgency,
+    });
+
+    const scenarios = calculateScenarios({
+      financedAmount,
+      interestRate: data.interestRate,
+      termMonths: data.termMonths,
+      adminFee: data.adminFee,
+      bidValue: data.bidValue,
+      consortiumIndex: data.consortiumIndex,
+      extraAmortizationValue: data.extraAmortizationValue,
     });
 
     const chartData = sac.monthlyData.map((sacData) => {
@@ -107,7 +118,7 @@ export class SimulationService {
       aiReason,
     });
 
-    return { ...simulation, chartData };
+    return { ...simulation, chartData, scenarios };
   }
 
   async list(userId: string) {

@@ -2,6 +2,7 @@ import { calculateSac } from "../src/modules/simulation/engines/financing-sac.en
 import { calculatePrice } from "../src/modules/simulation/engines/financing-price.engine";
 import { calculateConsortium } from "../src/modules/simulation/engines/consortium.engine";
 import { calculateRecommendation } from "../src/modules/simulation/engines/recommendation.engine";
+import { calculateScenarios } from "../src/modules/simulation/engines/scenarios.engine";
 
 describe("Engine SAC", () => {
   it("deve calcular financiamento SAC corretamente", () => {
@@ -177,5 +178,50 @@ describe("Engine Recomendação", () => {
     });
 
     expect(result.reason.length).toBeGreaterThan(20);
+  });
+});
+
+describe("Engine Cenários", () => {
+  const input = {
+    financedAmount: 280000,
+    interestRate: 0.0095,
+    termMonths: 360,
+    adminFee: 0.0018,
+    bidValue: 0,
+    consortiumIndex: "FIXO" as const,
+    extraAmortizationValue: 500,
+  };
+
+  it("deve gerar cenários cobrindo SAC, PRICE e consórcio", () => {
+    const result = calculateScenarios(input);
+
+    const modalidades = new Set(result.scenarios.map((s) => s.modality));
+    expect(modalidades.has("SAC")).toBe(true);
+    expect(modalidades.has("PRICE")).toBe(true);
+    expect(modalidades.has("CONSORTIUM")).toBe(true);
+    expect(result.scenarios.length).toBeGreaterThanOrEqual(10);
+  });
+
+  it("deve quantificar o impacto da amortização em SAC e PRICE", () => {
+    const result = calculateScenarios(input);
+
+    expect(result.insights.amortizationImpactSac).toBeGreaterThan(0);
+    expect(result.insights.amortizationImpactPrice).toBeGreaterThan(0);
+  });
+
+  it("deve calcular sensibilidade à taxa de juros", () => {
+    const result = calculateScenarios(input);
+    expect(result.insights.rateSensitivity).toBeGreaterThan(0);
+  });
+
+  it("deve identificar impacto do reajuste no consórcio", () => {
+    const result = calculateScenarios(input);
+    expect(result.insights.consortiumIndexImpact).toBeGreaterThan(0);
+  });
+
+  it("deve usar valor padrão de aporte quando o usuário não informa", () => {
+    const semAporte = calculateScenarios({ ...input, extraAmortizationValue: 0 });
+    const cenarioSacPrazo = semAporte.scenarios.find((s) => s.id === "sac-amort-prazo");
+    expect(cenarioSacPrazo?.savingsVsBaseline).toBeGreaterThan(0);
   });
 });
