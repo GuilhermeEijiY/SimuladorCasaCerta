@@ -5,6 +5,7 @@ import { calculatePrice } from "./engines/financing-price.engine";
 import { calculateConsortium } from "./engines/consortium.engine";
 import { calculateRecommendation } from "./engines/recommendation.engine";
 import { generateAiRecommendation } from "./engines/ai-recommendation.engine";
+import { calculateScenarios } from "./engines/scenarios.engine";
 
 const repository = new SimulationRepository();
 
@@ -24,6 +25,8 @@ export class SimulationService {
       financedAmount,
       interestRate: data.interestRate,
       termMonths: data.termMonths,
+      extraAmortizationValue: data.extraAmortizationValue,
+      amortizationStrategy: data.amortizationStrategy,
     });
 
     const consortium = calculateConsortium({
@@ -34,12 +37,23 @@ export class SimulationService {
       consortiumIndex: data.consortiumIndex,
     });
 
+    const scenarios = calculateScenarios({
+      financedAmount,
+      interestRate: data.interestRate,
+      termMonths: data.termMonths,
+      adminFee: data.adminFee,
+      bidValue: data.bidValue,
+      consortiumIndex: data.consortiumIndex,
+      extraAmortizationValue: data.extraAmortizationValue,
+    });
+
     const recommendation = calculateRecommendation({
       sac,
       price,
       consortium,
       monthlyIncome: data.monthlyIncome,
       urgency: data.urgency,
+      scenariosInsights: scenarios.insights,
     });
 
     const chartData = sac.monthlyData.map((sacData) => {
@@ -50,18 +64,20 @@ export class SimulationService {
       );
       const fallbackConsortium =
         consortium.monthlyData[consortium.monthlyData.length - 1];
-
       const consortiumCost =
         foundConsortium?.accumulatedCost ??
         fallbackConsortium?.accumulatedCost ??
         0;
 
-      const priceCost = (price.totalCost / data.termMonths) * month;
+      const foundPrice = price.monthlyData.find((p) => p.month === month);
+      const fallbackPrice = price.monthlyData[price.monthlyData.length - 1];
+      const priceCost =
+        foundPrice?.accumulatedCost ?? fallbackPrice?.accumulatedCost ?? 0;
 
       return {
         month,
         sac: sacData.accumulatedCost,
-        price: Math.round(priceCost * 100) / 100,
+        price: priceCost,
         consortium: consortiumCost,
       };
     });
@@ -77,6 +93,7 @@ export class SimulationService {
           price,
           consortium,
           recommendation,
+          scenarios,
           monthlyIncome: data.monthlyIncome,
           urgency: data.urgency,
           objective: data.objective,
@@ -90,19 +107,26 @@ export class SimulationService {
     }
 
     const { monthlyData: _, ...cleanSac } = sac;
-    const { monthlyData: __, ...cleanConsortium } = consortium;
+    const { monthlyData: __, ...cleanPrice } = price;
+    const { monthlyData: ___, ...cleanConsortium } = consortium;
 
     const simulation = await repository.create({
       userId,
       input: data,
       sac: cleanSac as any,
-      price: price as any,
+      price: cleanPrice as any,
       consortium: cleanConsortium as any,
       recommendation,
       aiReason,
     });
 
-    return { ...simulation, chartData };
+    return {
+      ...simulation,
+      chartData,
+      scenarios,
+      recommendationFactors: recommendation.factors,
+      decisiveFactor: recommendation.decisiveFactor,
+    };
   }
 
   async list(userId: string) {

@@ -2,6 +2,7 @@ import { calculateSac } from "../src/modules/simulation/engines/financing-sac.en
 import { calculatePrice } from "../src/modules/simulation/engines/financing-price.engine";
 import { calculateConsortium } from "../src/modules/simulation/engines/consortium.engine";
 import { calculateRecommendation } from "../src/modules/simulation/engines/recommendation.engine";
+import { calculateScenarios } from "../src/modules/simulation/engines/scenarios.engine";
 
 describe("Engine SAC", () => {
   it("deve calcular financiamento SAC corretamente", () => {
@@ -47,6 +48,53 @@ describe("Engine PRICE", () => {
     const price = calculatePrice(inputs);
 
     expect(price.totalCost).toBeGreaterThan(sac.totalCost);
+  });
+
+  it("deve reduzir prazo quando amortização extra é aplicada com estratégia PRAZO", () => {
+    const base = calculatePrice({
+      financedAmount: 280000,
+      interestRate: 0.0095,
+      termMonths: 360,
+    });
+
+    const comAmortizacao = calculatePrice({
+      financedAmount: 280000,
+      interestRate: 0.0095,
+      termMonths: 360,
+      extraAmortizationValue: 500,
+      amortizationStrategy: "PRAZO",
+    });
+
+    expect(comAmortizacao.totalCost).toBeLessThan(base.totalCost);
+    expect(comAmortizacao.timeSavedMonths).toBeGreaterThan(0);
+    expect(comAmortizacao.savingsWithAmortization).toBeGreaterThan(0);
+  });
+
+  it("deve reduzir prestação ao longo do tempo na estratégia PRESTACAO", () => {
+    const result = calculatePrice({
+      financedAmount: 280000,
+      interestRate: 0.0095,
+      termMonths: 360,
+      extraAmortizationValue: 500,
+      amortizationStrategy: "PRESTACAO",
+    });
+
+    expect(result.lastInstallment).toBeLessThan(result.firstInstallment);
+    expect(result.savingsWithAmortization).toBeGreaterThan(0);
+  });
+
+  it("não deve aplicar amortização quando estratégia é NENHUM", () => {
+    const result = calculatePrice({
+      financedAmount: 280000,
+      interestRate: 0.0095,
+      termMonths: 360,
+      extraAmortizationValue: 500,
+      amortizationStrategy: "NENHUM",
+    });
+
+    expect(result.timeSavedMonths).toBeUndefined();
+    expect(result.savingsWithAmortization).toBeUndefined();
+    expect(result.firstInstallment).toBeCloseTo(result.lastInstallment, 2);
   });
 });
 
@@ -130,5 +178,97 @@ describe("Engine Recomendação", () => {
     });
 
     expect(result.reason.length).toBeGreaterThan(20);
+  });
+
+  it("deve retornar fatores estruturados de decisão", () => {
+    const result = calculateRecommendation({
+      sac,
+      price,
+      consortium,
+      monthlyIncome: 12000,
+      urgency: "MEDIA",
+    });
+
+    expect(result.factors.length).toBe(5);
+    const nomes = result.factors.map((f) => f.name);
+    expect(nomes).toContain("Custo total");
+    expect(nomes).toContain("Comprometimento de renda");
+    expect(nomes).toContain("Urgência");
+    expect(nomes).toContain("Previsibilidade");
+    expect(nomes).toContain("Flexibilidade");
+    result.factors.forEach((f) => {
+      expect(f.explanation.length).toBeGreaterThan(10);
+      expect(["FINANCIAMENTO", "CONSORCIO", "NEUTRO"]).toContain(f.favors);
+    });
+  });
+
+  it("deve identificar o fator decisivo da recomendação", () => {
+    const result = calculateRecommendation({
+      sac,
+      price,
+      consortium,
+      monthlyIncome: 12000,
+      urgency: "ALTA",
+    });
+
+    expect(result.decisiveFactor).toBeTruthy();
+    expect(result.factors.map((f) => f.name)).toContain(result.decisiveFactor);
+  });
+
+  it("deve gerar reason explicativo citando o fator decisivo", () => {
+    const result = calculateRecommendation({
+      sac,
+      price,
+      consortium,
+      monthlyIncome: 12000,
+      urgency: "ALTA",
+    });
+
+    expect(result.reason).toContain(result.decisiveFactor);
+  });
+});
+
+describe("Engine Cenários", () => {
+  const input = {
+    financedAmount: 280000,
+    interestRate: 0.0095,
+    termMonths: 360,
+    adminFee: 0.0018,
+    bidValue: 0,
+    consortiumIndex: "FIXO" as const,
+    extraAmortizationValue: 500,
+  };
+
+  it("deve gerar cenários cobrindo SAC, PRICE e consórcio", () => {
+    const result = calculateScenarios(input);
+
+    const modalidades = new Set(result.scenarios.map((s) => s.modality));
+    expect(modalidades.has("SAC")).toBe(true);
+    expect(modalidades.has("PRICE")).toBe(true);
+    expect(modalidades.has("CONSORTIUM")).toBe(true);
+    expect(result.scenarios.length).toBeGreaterThanOrEqual(10);
+  });
+
+  it("deve quantificar o impacto da amortização em SAC e PRICE", () => {
+    const result = calculateScenarios(input);
+
+    expect(result.insights.amortizationImpactSac).toBeGreaterThan(0);
+    expect(result.insights.amortizationImpactPrice).toBeGreaterThan(0);
+  });
+
+  it("deve calcular sensibilidade à taxa de juros", () => {
+    const result = calculateScenarios(input);
+    expect(result.insights.rateSensitivity).toBeGreaterThan(0);
+  });
+
+  it("deve identificar impacto do reajuste no consórcio", () => {
+    const result = calculateScenarios(input);
+    expect(result.insights.consortiumIndexImpact).toBeGreaterThan(0);
+  });
+
+  it("deve usar valor padrão de aporte quando o usuário não informa", () => {
+    const semAporte = calculateScenarios({ ...input, extraAmortizationValue: 0 });
+    const cenarioSacPrazo = semAporte.scenarios.find((s) => s.id === "sac-amort-prazo");
+    expect(cenarioSacPrazo?.savingsVsBaseline).toBeGreaterThan(0);
   });
 });

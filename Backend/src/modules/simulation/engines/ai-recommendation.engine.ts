@@ -4,6 +4,7 @@ import { SacOutput } from "./financing-sac.engine";
 import { PriceOutput } from "./financing-price.engine";
 import { ConsortiumOutput } from "./consortium.engine";
 import { RecommendationOutput } from "./recommendation.engine";
+import { ScenariosOutput } from "./scenarios.engine";
 
 const groq = new Groq({ apiKey: env.GROQ_API_KEY });
 
@@ -25,6 +26,9 @@ INSTRUÇÕES:
 - Sempre responda em português brasileiro.
 - Seja claro, objetivo e didático.
 - Explique o raciocínio de forma que uma pessoa sem conhecimento financeiro entenda.
+- Foque em explicar POR QUE essa estratégia é melhor no cenário do usuário, citando o fator decisivo da decisão.
+- Compare estratégias de amortização (no prazo vs na prestação) quando o impacto for relevante.
+- Comente o efeito da taxa de juros e do índice de reajuste do consórcio sobre o resultado.
 - Mencione vantagens e desvantagens da opção recomendada.
 - Dê dicas práticas ao usuário.
 - Limite sua resposta a no máximo 4 parágrafos curtos.
@@ -35,6 +39,7 @@ export interface AiRecommendationInput {
   price: PriceOutput;
   consortium: ConsortiumOutput;
   recommendation: RecommendationOutput;
+  scenarios: ScenariosOutput;
   monthlyIncome: number;
   urgency: "BAIXA" | "MEDIA" | "ALTA";
   objective: "MORADIA" | "INVESTIMENTO" | "MUDANCA";
@@ -45,13 +50,27 @@ export interface AiRecommendationInput {
 
 export async function generateAiRecommendation(input: AiRecommendationInput): Promise<string> {
   const {
-    sac, price, consortium, recommendation,
+    sac, price, consortium, recommendation, scenarios,
     monthlyIncome, urgency, objective, propertyValue, downPayment, termMonths,
   } = input;
 
   const incomeRatioSac = ((sac.firstInstallment / monthlyIncome) * 100).toFixed(1);
   const incomeRatioPrice = ((price.fixedInstallment / monthlyIncome) * 100).toFixed(1);
   const incomeRatioConsortium = ((consortium.monthlyPayment / monthlyIncome) * 100).toFixed(1);
+
+  const factorsBlock = recommendation.factors
+    .map(
+      (f) =>
+        `- ${f.name} (peso ${(f.weight * 100).toFixed(0)}%): financ=${f.scoreFinancing} | cons=${f.scoreConsortium} | favorece=${f.favors}. ${f.explanation}`,
+    )
+    .join("\n");
+
+  const scenariosBlock = scenarios.scenarios
+    .map(
+      (s) =>
+        `- ${s.label} (${s.modality}): custo total R$${s.totalCost.toFixed(0)} | economia vs base R$${s.savingsVsBaseline.toFixed(0)}${s.timeSavedMonths ? ` | reduz ${s.timeSavedMonths} meses` : ""}`,
+    )
+    .join("\n");
 
   const userMessage = `Analise esta simulação e gere uma recomendação personalizada:
 
@@ -83,11 +102,26 @@ RESULTADOS DA SIMULAÇÃO:
 
 DECISÃO DO MOTOR DE SCORING:
 - Opção recomendada: ${recommendation.recommendedOption}
+- Fator decisivo: ${recommendation.decisiveFactor}
 - Score financiamento: ${recommendation.scoreFinancing}
 - Score consórcio: ${recommendation.scoreConsortium}
 - Economia estimada: R$${recommendation.savingsEstimate.toFixed(2)}
 
-Com base nesses dados, explique ao usuário por que essa é a melhor opção para o perfil dele e dê orientações práticas.`;
+FATORES DETALHADOS DO SCORING:
+${factorsBlock}
+
+CENÁRIOS ALTERNATIVOS SIMULADOS:
+${scenariosBlock}
+
+INSIGHTS DOS CENÁRIOS:
+- Economia máxima com amortização extra no SAC: R$${scenarios.insights.amortizationImpactSac.toFixed(0)}
+- Economia máxima com amortização extra no PRICE: R$${scenarios.insights.amortizationImpactPrice.toFixed(0)}
+- Melhor estratégia de amortização: ${scenarios.insights.bestAmortizationStrategy}
+- Melhor modalidade para amortização: ${scenarios.insights.bestAmortizationModality}
+- Sensibilidade do custo total a variação de 0,1% na taxa: R$${scenarios.insights.rateSensitivity.toFixed(0)}
+- Impacto do reajuste anual no consórcio: R$${scenarios.insights.consortiumIndexImpact.toFixed(0)}
+
+Explique ao usuário POR QUE essa é a melhor opção para o perfil dele, citando o fator decisivo. Compare brevemente as estratégias de amortização e o impacto da taxa de juros. Dê orientações práticas.`;
 
   const completion = await groq.chat.completions.create({
     model: "llama-3.3-70b-versatile",
