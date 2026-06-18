@@ -1,5 +1,4 @@
 import { InputHTMLAttributes, useId } from "react";
-import React from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -11,6 +10,7 @@ export function Input({
   error,
   className = "",
   id,
+  onFocus,
   ...props
 }: InputProps) {
   const generatedId = useId();
@@ -23,13 +23,17 @@ export function Input({
         {label}
       </label>
       <input
-        className={`px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-          error ? "border-red-500 focus:ring-red-500" : "border-gray-300"
-        } ${className}`}
+        id={inputId}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
         onFocus={(e) => {
-          e.target.select(); // Seleciona o texto todo ao clicar!
-          if (props.onFocus) props.onFocus(e);
+          e.target.select();
+          onFocus?.(e);
         }}
+        className={`px-4 py-3 border rounded-lg bg-white text-gray-900 transition-colors placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:border-transparent ${error
+            ? "border-red-500 focus:ring-red-500"
+            : "border-gray-300 focus:ring-brand-500"
+          } ${className}`}
         {...props}
       />
       {error && (
