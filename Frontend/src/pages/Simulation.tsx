@@ -152,7 +152,7 @@ export function Simulation() {
               <select
                 value={form.objective}
                 onChange={(e) => update("objective", e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
               >
                 <option value="MORADIA">Moradia</option>
                 <option value="INVESTIMENTO">Investimento</option>
@@ -167,7 +167,7 @@ export function Simulation() {
               <select
                 value={form.urgency}
                 onChange={(e) => update("urgency", e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
               >
                 <option value="BAIXA">Baixa</option>
                 <option value="MEDIA">Média</option>
@@ -180,7 +180,7 @@ export function Simulation() {
             <button
               type="button"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className="text-emerald-600 font-medium text-sm flex items-center gap-2 hover:text-emerald-700 transition-colors"
+              className="text-brand-600 font-medium text-sm flex items-center gap-2 hover:text-brand-700 transition-colors"
             >
               {showAdvanced ? "Ocultar" : "Mostrar"} Opções Avançadas
               (Amortização e Reajustes)
@@ -219,7 +219,7 @@ export function Simulation() {
                         e.target.value as SimulationInput["amortizationStrategy"]
                       )
                     }
-                    className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                    className="px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                   >
                     <option value="NENHUM">Nenhum</option>
                     <option value="PRAZO">Reduzir Prazo</option>
@@ -233,7 +233,7 @@ export function Simulation() {
                   <select
                     value={form.consortiumIndex}
                     onChange={(e) => update("consortiumIndex", e.target.value)}
-                    className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                    className="px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                   >
                     <option value="FIXO">Parcela Fixa (Sem Reajuste)</option>
                     <option value="INCC">INCC</option>
