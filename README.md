@@ -207,10 +207,6 @@ O backend utiliza o padrão:
 
 Pessoas interessadas em adquirir imóveis e que precisam comparar alternativas financeiras de forma clara, visual e acessível.
 
-### Cliente institucional
-
-Professor da disciplina CCE.
-
 ### Cliente real
 
 Lucas Tanaka, potencial comprador de imóvel.
