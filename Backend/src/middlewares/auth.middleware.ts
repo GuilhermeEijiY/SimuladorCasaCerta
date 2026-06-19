@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "../config/env";
 import { AppError } from "../utils/app-error";
@@ -15,22 +15,27 @@ declare global {
   }
 }
 
-export function authMiddleware(req: Request, _res: Response, next: NextFunction) {
+export function authMiddleware(
+  req: Request,
+  _res: Response,
+  next: NextFunction
+) {
   const header = req.headers.authorization;
 
   if (!header || !header.startsWith("Bearer ")) {
     throw new AppError(401, "Token não fornecido");
   }
 
-  const token = header.split(" ")[1] as string | undefined;
-
-  if (!token) {
-    throw new AppError(401, "Token não fornecido");
-  }
+  const token = header.split(" ")[1] as string;
 
   try {
-    const payload = jwt.verify(token, env.JWT_SECRET) as unknown as AuthPayload;
+    const payload = jwt.verify(
+      token,
+      env.JWT_SECRET as string
+    ) as unknown as AuthPayload;
+
     req.userId = payload.userId;
+
     next();
   } catch {
     throw new AppError(401, "Token inválido");
