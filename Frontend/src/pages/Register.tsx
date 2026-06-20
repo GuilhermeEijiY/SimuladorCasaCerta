@@ -31,7 +31,7 @@ export function Register() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-73px)] flex items-center justify-center bg-gradient-to-br from-brand-50 to-accent-50 px-4 py-12">
+    <div className="min-h-[calc(100vh-73px)] flex items-center justify-center bg-gradient-to-br from-[#111c2e] to-[#0a201b] px-4 py-12">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-md border border-gray-100 p-8">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-900">Criar conta</h1>

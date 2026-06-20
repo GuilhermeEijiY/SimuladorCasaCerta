@@ -7,7 +7,7 @@ export function Home() {
 
   return (
     <div>
-      <section className="bg-gradient-to-br from-brand-50 to-accent-50 py-20 px-4">
+      <section className="bg-gradient-to-br from-[#111c2e] to-[#0a201b] py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
             Compare e escolha a melhor forma de adquirir seu imóvel

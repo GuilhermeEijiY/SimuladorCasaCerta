@@ -19,13 +19,29 @@
   --color-accent-500: #14b8a6;
   --color-accent-600: #0d9488;
   --color-accent-700: #0f766e;
+  /* ===== Tema escuro (base neutra + acentos coloridos) ===== */
+
+  --color-white: #1e293b;
+  --color-gray-50: #0f172a;
+  --color-gray-100: #334155;
+  --color-gray-200: #334155;
+  --color-gray-300: #475569;
+
+  --color-gray-400: #64748b;
+  --color-gray-500: #94a3b8;
+  --color-gray-600: #cbd5e1;
+  --color-gray-700: #cbd5e1;
+  --color-gray-900: #f1f5f9;
 }
 
 @layer base {
   body {
+    body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: var(--color-gray-50);
     color: var(--color-gray-900, #111827);
+  }
   }
 
   html {
