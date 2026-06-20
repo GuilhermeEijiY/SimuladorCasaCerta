@@ -31,18 +31,18 @@
   --color-gray-500: #94a3b8;
   --color-gray-600: #cbd5e1;
   --color-gray-700: #cbd5e1;
+  --color-gray-800: #e2e8f0;
   --color-gray-900: #f1f5f9;
 }
 
 @layer base {
   body {
-    body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: var(--color-gray-50);
     color: var(--color-gray-900, #111827);
   }
-  }
+  
 
   html {
     scroll-behavior: smooth;
