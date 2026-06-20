@@ -29,7 +29,7 @@ export function Home() {
           Como funciona
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-100 transition-shadow duration-200 hover:shadow-lg hover:shadow-brand-500/20">
             <div className="w-14 h-14 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl font-bold text-brand-600">1</span>
             </div>
