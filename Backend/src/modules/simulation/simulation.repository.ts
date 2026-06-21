@@ -13,6 +13,10 @@ interface PersistSimulationData {
   consortium: ConsortiumOutput;
   recommendation: RecommendationOutput;
   aiReason: string | null;
+  chartData: any;
+  scenarios: any;
+  recommendationFactors: any;
+  decisiveFactor: string | null;
 }
 
 export class SimulationRepository {
@@ -31,6 +35,10 @@ export class SimulationRepository {
         bidValue: data.input.bidValue,
         objective: data.input.objective,
         urgency: data.input.urgency,
+        chartData: data.chartData,
+        scenarios: data.scenarios,
+        recommendationFactors: data.recommendationFactors,
+        decisiveFactor: data.decisiveFactor,
         financingResults: {
           createMany: {
             data: [

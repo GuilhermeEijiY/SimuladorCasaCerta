@@ -1,4 +1,5 @@
 import { InputHTMLAttributes, useId } from "react";
+import React from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -30,10 +31,11 @@ export function Input({
           e.target.select();
           onFocus?.(e);
         }}
-        className={`px-4 py-3 border rounded-lg bg-white text-gray-900 transition-colors placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:border-transparent ${error
+        className={`px-4 py-3 border rounded-lg bg-white text-gray-900 transition-colors placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:border-transparent ${
+          error
             ? "border-red-500 focus:ring-red-500"
             : "border-gray-300 focus:ring-brand-500"
-          } ${className}`}
+        } ${className}`}
         {...props}
       />
       {error && (

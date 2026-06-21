@@ -2,13 +2,19 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Simulation, listSimulations } from "../api/simulation.api";
 import { Button } from "../components/ui/Button";
+import React from "react";
 
 function currency(value: string | number) {
-  return Number(value).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  return Number(value).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
 }
 
 function optionLabel(option: string) {
-  return option.replace("FINANCING_", "Financiamento ").replace("CONSORTIUM", "Consórcio");
+  return option
+    .replace("FINANCING_", "Financiamento ")
+    .replace("CONSORTIUM", "Consórcio");
 }
 
 export function History() {
@@ -25,7 +31,7 @@ export function History() {
   }, []);
 
   if (loading) {
-    return(
+    return (
       <div className="min-h-[calc(100vh-73px)] flex items-center justify-center bg-gray-50">
         <div className="flex items-center gap-3 text-gray-500">
           <span className="w-5 h-5 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
@@ -54,15 +60,21 @@ export function History() {
 
         {simulations.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-xl border border-gray-100">
-            <p className="text-gray-400 mb-4">Nenhuma simulação realizada ainda.</p>
-            <Button onClick={() => navigate("/simulacao")}>Fazer Primeira Simulação</Button>
+            <p className="text-gray-400 mb-4">
+              Nenhuma simulação realizada ainda.
+            </p>
+            <Button onClick={() => navigate("/simulacao")}>
+              Fazer Primeira Simulação
+            </Button>
           </div>
         ) : (
           <div className="space-y-4">
             {simulations.map((sim) => (
               <div
                 key={sim.id}
-                onClick={() => navigate("/resultado", { state: { simulation: sim } })}
+                onClick={() =>
+                  navigate("/resultado", { state: { simulation: sim } })
+                }
                 className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 cursor-pointer hover:shadow-md transition-shadow"
               >
                 <div className="flex items-center justify-between mb-3">
@@ -88,19 +100,27 @@ export function History() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
                     <span className="text-gray-400 block">Imóvel</span>
-                    <span className="font-semibold text-gray-800">{currency(sim.propertyValue)}</span>
+                    <span className="font-semibold text-gray-800">
+                      {currency(sim.propertyValue)}
+                    </span>
                   </div>
                   <div>
                     <span className="text-gray-400 block">Entrada</span>
-                    <span className="font-semibold text-gray-800">{currency(sim.downPayment)}</span>
+                    <span className="font-semibold text-gray-800">
+                      {currency(sim.downPayment)}
+                    </span>
                   </div>
                   <div>
                     <span className="text-gray-400 block">Renda</span>
-                    <span className="font-semibold text-gray-800">{currency(sim.monthlyIncome)}</span>
+                    <span className="font-semibold text-gray-800">
+                      {currency(sim.monthlyIncome)}
+                    </span>
                   </div>
                   <div>
                     <span className="text-gray-400 block">Prazo</span>
-                    <span className="font-semibold text-gray-800">{sim.termMonths} meses</span>
+                    <span className="font-semibold text-gray-800">
+                      {sim.termMonths} meses
+                    </span>
                   </div>
                 </div>
               </div>

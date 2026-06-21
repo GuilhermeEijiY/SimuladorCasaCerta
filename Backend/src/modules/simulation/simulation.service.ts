@@ -118,15 +118,13 @@ export class SimulationService {
       consortium: cleanConsortium as any,
       recommendation,
       aiReason,
-    });
-
-    return {
-      ...simulation,
       chartData,
       scenarios,
       recommendationFactors: recommendation.factors,
-      decisiveFactor: recommendation.decisiveFactor,
-    };
+      decisiveFactor: recommendation.decisiveFactor || null,
+    });
+
+    return simulation;
   }
 
   async list(userId: string) {

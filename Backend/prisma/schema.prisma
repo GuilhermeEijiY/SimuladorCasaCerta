@@ -31,6 +31,10 @@ model Simulation {
   bidValue        Decimal?           @map("bid_value") @db.Decimal(12, 2)
   objective       String
   urgency         String
+  chartData             Json?   @map("chart_data")
+  scenarios             Json?
+  recommendationFactors Json?   @map("recommendation_factors")
+  decisiveFactor        String? @map("decisive_factor")
   createdAt       DateTime           @default(now()) @map("created_at")
   user            User               @relation(fields: [userId], references: [id])
   financingResults FinancingResult[]
