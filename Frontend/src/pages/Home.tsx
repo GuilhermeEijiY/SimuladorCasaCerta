@@ -38,7 +38,7 @@ export function Home() {
               Informe o valor do imóvel, entrada, renda e outras condições do financiamento.
             </p>
           </div>
-          <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-100 transition-shadow duration-200 hover:shadow-lg hover:shadow-brand-500/20">
             <div className="w-14 h-14 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl font-bold text-brand-600">2</span>
             </div>
@@ -47,7 +47,7 @@ export function Home() {
               Veja a comparação detalhada entre SAC, PRICE e consórcio em cards visuais.
             </p>
           </div>
-          <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-100 transition-shadow duration-200 hover:shadow-lg hover:shadow-brand-500/20">
             <div className="w-14 h-14 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl font-bold text-brand-600">3</span>
             </div>
@@ -65,7 +65,7 @@ export function Home() {
             Financiamento vs Consórcio
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 transition-shadow duration-200 hover:shadow-lg hover:shadow-brand-500/20">
               <h3 className="text-xl font-semibold text-blue-600 mb-4">Financiamento</h3>
               <ul className="space-y-3 text-gray-600">
                 <li>Acesso imediato ao imóvel</li>
@@ -75,7 +75,7 @@ export function Home() {
                 <li>Custo total geralmente maior</li>
               </ul>
             </div>
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 transition-shadow duration-200 hover:shadow-lg hover:shadow-brand-500/20">
               <h3 className="text-xl font-semibold text-teal-600 mb-4">Consórcio</h3>
               <ul className="space-y-3 text-gray-600">
                 <li>Sem juros, apenas taxa administrativa</li>
