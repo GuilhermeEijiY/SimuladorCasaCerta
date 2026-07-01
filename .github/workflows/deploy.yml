@@ -1,11 +1,11 @@
-name: Deploy Frontend
+name: Deploy
 
 on:
   push:
     branches: [main]
 
 jobs:
-  deploy:
+  deploy-frontend:
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -38,3 +38,30 @@ jobs:
       - name: Atribuir alias casacerta-cce.vercel.app
         working-directory: ./Frontend
         run: vercel alias ${{ steps.deploy.outputs.url }} casacerta-cce.vercel.app --token=${{ secrets.VERCEL_TOKEN }}
+
+  deploy-backend:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: prj_U9N7AJFgefizoeMcQjpWIN9XEX2X
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar Vercel CLI
+        run: npm install -g vercel
+
+      - name: Pull configuração da Vercel
+        working-directory: ./Backend
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build do projeto
+        working-directory: ./Backend
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy na Vercel
+        working-directory: ./Backend
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
